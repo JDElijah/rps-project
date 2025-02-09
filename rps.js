@@ -1,3 +1,4 @@
+// Query selectors for butns and headings from the HTML doc
 const rockBtn = document.querySelector(".rockBtn");
 const paperBtn = document.querySelector(".paperBtn");
 const scissorsBtn = document.querySelector(".scissorsBtn");
@@ -7,78 +8,84 @@ const resultHeading = document.querySelector(".result");
 const roundHeading = document.querySelector(".round");
 const scoreHeading = document.querySelector(".score");
 
+// variables to score game rounds and player/comp scores 
 let playerScore = 0; 
 let compScore = 0;
 let roundNum = 1; 
 
+const playButtons = document.querySelectorAll(".button-container button")
 
+const choiceMap = {
+    rockBtn: "rock 🗿", 
+    paperBtn: "paper 🧻",
+    scissorsBtn: "scissors ✂️"
+};
+
+// Function that randomly selectors rock, paper, or scissors for the computer's choice
 function getComputerChoice() {
-    const choices = ['rock', 'paper', 'scissors']; 
+    const choices = ['rock 🗿', 'paper 🧻', 'scissors ✂️']; 
     let compChoice = choices[Math.floor(Math.random() * choices.length)];
     compHeading.textContent = `Computer chose: ${compChoice}`;
     return compChoice;
 }
 
-// function getPlayerChoice() {
-//     let choice; 
-//     do {
-//         choice = prompt('Enter rock, paper, or scissors').toLowerCase(); 
-//     } while (!['rock', 'paper', 'scissors'].includes(choice)); 
-//     return choice; 
-// }
-
+// Function that determines the winner between comp and player. Returns string for tie, win, or loss. 
 function determineWinner(player, computer) {
-    if (player === computer) return "It's a tie!"; 
-    return (player === 'rock' && computer === 'scissors') || 
-            (player === 'paper' && computer === 'rock') ||
-            (player === 'scissors' && computer === 'paper') ? 'You win!' : 'Computer wins!'
+    if (player === computer) return "It's a tie!";
+
+    const winCondition = {
+        "rock 🗿": "scissors ✂️",
+        "paper 🧻": "rock 🗿", 
+       "scissors ✂️": "paper 🧻" 
+    };
+
+    return winCondition[player] === computer ? "You win!" : "Computer wins!"; 
+
 }
 
+// Function to play a round of rps, where player choice is given, comp choice is decided, and a winner is determined. Based on result, points are given. 
 function playRound(playerChoice) {
 
-    // let playerScore = 0, computerScore = 0; 
-    // const playerChoice = player
     const computerChoice = getComputerChoice(); 
     
-    // console.log(`You chose: ${playerChoice}`); 
-    // console.log(`Computer chose: ${computerChoice}`);
-
     const resultOfRound = determineWinner(playerChoice, computerChoice); 
-    resultHeading.textContent = `result: ${resultOfRound}`;
+    resultHeading.textContent = `Result: ${resultOfRound}`;
 
     if (resultOfRound === "You win!") {
         playerScore++; 
     } else if (resultOfRound === "Computer wins!") {
         compScore++;
     };
-    
-    
-    // scoreHeading.textContent = `You = ${playerScore} | Computer = ${computerScore}`; 
-//     console.log(playerScore > computerScore ? "Congragulations, you've won the game!" : 
-//                 playerScore < computerScore ?  "Computer wins! Better luck next time." :
-//                 "It's a draw!");
 }
 
-// playGame();
 
-const playButtons = document.querySelectorAll(".button-container button")
 
+// For each button, add an event listener that will trigger a round of rps until a 5th round occurs. 
 playButtons.forEach((button) => {
     button.addEventListener("click", () =>  {
         if (roundNum > 5) return; // Prevents further rounds 
-        let player; 
-        if (button === rockBtn) {
-            player = 'rock';
-        } else if (button === paperBtn) {
-            player = 'paper';
-        } else {
-            player = 'scissors'; 
-        }
+
+        const player = choiceMap[button.classList[0]]; // Get choice baesd on class. 
         playerHeading.textContent = `Player chose: ${player}`;
         roundHeading.textContent = `Round: ${roundNum}`;
+       
         playRound(player);
         roundNum++
         scoreHeading.textContent =`You = ${playerScore} | Computer = ${compScore}`;
     });
+});
+
+// reset button functionality to reset game. 
+document.querySelector(".resetBtn").addEventListener("click", () => {
+    playerScore = 0;
+    compScore = 0;
+    roundNum = 1;
+
+    playerHeading.textContent = "[player]";
+    compHeading.textContent = "[computer]";
+    resultHeading.textContent = "[result]";
+    roundHeading.textContent = "[round]";
+    scoreHeading.textContent = "[score]";
+
 });
 
