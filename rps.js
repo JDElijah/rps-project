@@ -13,13 +13,7 @@ let playerScore = 0;
 let compScore = 0;
 let roundNum = 1; 
 
-const playButtons = document.querySelectorAll(".button-container button")
 
-const choiceMap = {
-    rockBtn: "rock 🗿", 
-    paperBtn: "paper 🧻",
-    scissorsBtn: "scissors ✂️"
-};
 
 // Function that randomly selectors rock, paper, or scissors for the computer's choice
 function getComputerChoice() {
@@ -58,7 +52,13 @@ function playRound(playerChoice) {
     };
 }
 
+const choiceMap = {
+    rockBtn: "rock 🗿", 
+    paperBtn: "paper 🧻",
+    scissorsBtn: "scissors ✂️"
+};
 
+const playButtons = document.querySelectorAll(".button-container button")
 
 // For each button, add an event listener that will trigger a round of rps until a 5th round occurs. 
 playButtons.forEach((button) => {
